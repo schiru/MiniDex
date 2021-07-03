@@ -1,11 +1,22 @@
 <template>
-  <Search @search="performSearch" textValue=""></Search>
-  <ul>
-    <li :key="pokemon" v-for="pokemon in filteredPokemon">
-      {{ pokemon.name }}
-      <img v-bind:src="pokemon.url" loading="lazy" />
-    </li>
-  </ul>
+  <div class="row">
+    <div class="col">
+      <Search @search="performSearch" textValue=""></Search>
+      <ul>
+        <li :key="pokemon" v-for="pokemon in filteredPokemon">
+          <router-link
+            v-bind:to="{ name: 'Pokemon', params: { name: pokemon.name } }"
+            >{{ pokemon.name }}</router-link
+          >
+          <img v-bind:src="pokemon.url" loading="lazy" />
+        </li>
+      </ul>
+    </div>
+    <div class="col">
+      Router content:
+      <router-view />
+    </div>
+  </div>
 </template>
 
 <script>
@@ -44,7 +55,7 @@ export default {
         return response.json();
       })
       .then((json) => {
-        console.log(json);
+        console.log("fetched", json);
         let count = 1;
         this.pokemons = json.results.map((pokemon) => {
           return {
