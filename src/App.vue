@@ -1,19 +1,18 @@
 <template>
   <div class="row">
-    <div class="col">
+    <div class="col-sm-12 col-md-7" style="border: 1px solid blue">
       <Search @search="performSearch" textValue=""></Search>
-      <ul>
-        <li :key="pokemon" v-for="pokemon in filteredPokemon">
+      <div class="pokemon-list">
+        <div :key="pokemon" v-for="pokemon in filteredPokemon">
           <router-link
             v-bind:to="{ name: 'Pokemon', params: { name: pokemon.name } }"
             >{{ pokemon.name }}</router-link
           >
           <img v-bind:src="pokemon.url" loading="lazy" />
-        </li>
-      </ul>
+        </div>
+      </div>
     </div>
-    <div class="col">
-      Router content:
+    <div class="col-sm-12 col-md-5" style="border: 1px solid green">
       <router-view />
     </div>
   </div>
@@ -50,7 +49,7 @@ export default {
     },
   },
   mounted() {
-    fetch("https://pokeapi.co/api/v2/pokemon?limit=0")
+    fetch("https://pokeapi.co/api/v2/pokemon?limit=20")
       .then((response) => {
         return response.json();
       })
@@ -71,4 +70,25 @@ export default {
 </script>
 
 <style>
+.detail-view {
+  /* border: 2px solid fuchsia !important; */
+  top: 0px;
+  bottom: 0px;
+  overflow: scroll;
+  padding-right: 20px;
+  margin-right: 10px;
+}
+
+@media screen and (max-width: 767px) {
+  .detail-view {
+    overflow: scroll;
+    background-color: white; /* rgba(255, 255, 255, 0.4); */
+    position: fixed;
+    top: 0px !important;
+    left: 0px;
+    bottom: 0px;
+    right: 0px;
+    padding: 20px;
+  }
+}
 </style>
