@@ -47,8 +47,10 @@
   </div>
 </template>
 
-<script>
-export default {
+<script lang="ts">
+import { defineComponent } from "vue";
+
+export default defineComponent({
   name: "HelloWorld",
   props: {
     msg: String,
@@ -140,7 +142,7 @@ export default {
   mounted() {
     this.fetch_pokemon(this.$route.params.name);
   },
-};
+});
 </script>
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->

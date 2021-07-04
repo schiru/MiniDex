@@ -19,9 +19,10 @@
 </template>
 
 <script>
+import { defineComponent } from "vue";
 import Search from "./components/Search.vue";
 
-export default {
+export default defineComponent({
   name: "App",
   components: {
     Search,
@@ -66,7 +67,7 @@ export default {
       });
     this.pokemons = ["relaxo", "albert"];
   },
-};
+});
 </script>
 
 <style>
