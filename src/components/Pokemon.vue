@@ -25,6 +25,16 @@
 				</li>
 			</ul>
 
+			Evolutions:
+			<ul
+				v-bind:key="evolution"
+				v-for="evolution in rawInfo.evolutions_resolved"
+			>
+				<li>
+					{{ evolution }}
+				</li>
+			</ul>
+
 			<a
 				class="btn btn-primary"
 				data-bs-toggle="collapse"
@@ -97,6 +107,11 @@ export default defineComponent({
 						},
 					},
 				],
+				species: {
+					name: 'test',
+					url: 'https://example.com',
+				},
+				evolutions_resolved: ['test'],
 			},
 			error: false,
 		}
@@ -110,6 +125,7 @@ export default defineComponent({
 		fetch_pokemon(name: string) {
 			let baseUrl = 'https://pokeapi.co/api/v2/pokemon/'
 			let pokemonUrl = baseUrl + name
+			console.log('pokemon url: ', pokemonUrl)
 
 			fetch(pokemonUrl)
 				.then(response => {
@@ -128,6 +144,8 @@ export default defineComponent({
 					console.log('fetched pokemon', json)
 					this.info = JSON.stringify(json)
 					this.rawInfo = json
+
+					this.fetch_evolutions()
 				})
 
 			let poke = document.querySelector('#pokemon')
@@ -135,12 +153,44 @@ export default defineComponent({
 				poke.scrollTop = 0
 			}
 		},
+		async fetch_evolutions() {
+			// proof of concept:
+
+			const speciesUrl = this.rawInfo.species.url
+			console.log('species url: ', speciesUrl)
+
+			let species = (await (await fetch(speciesUrl)).json()) as any
+			let chainUrl = species['evolution_chain'].url
+			console.log('species', species)
+
+			// chain is recursive, format: {chain: {evolves_to: chain, species: {name, url}}}
+			let chain = (await (await fetch(chainUrl)).json()) as any
+			chain = chain.chain
+			console.log('chain:', chain)
+
+			let evolutions: string[] = []
+			let currentEvolution = chain.evolves_to
+			let currentSpecies = chain.species
+
+			evolutions.push(currentSpecies.name)
+
+			while (currentEvolution.length > 0) {
+				currentSpecies = currentEvolution[0].species
+				currentEvolution = currentEvolution[0].evolves_to
+
+				evolutions.push(currentSpecies.name)
+			}
+
+			console.log('evolutions: ', evolutions)
+
+			this.rawInfo.evolutions_resolved = evolutions
+		},
 	},
 	watch: {
 		$route(to, from) {
 			from // avoid warining that `from` is unused
-
-			if (to.params.name === 'string') {
+			console.log('route destination changed')
+			if (typeof to.params.name === 'string') {
 				this.fetch_pokemon(to.params.name)
 			}
 		},
