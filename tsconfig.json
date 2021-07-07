@@ -12,9 +12,7 @@
     "sourceMap": true,
     "baseUrl": ".",
     "types": [
-      "webpack-env",
-      "jquery",
-      "bootstrap"
+      "webpack-env"
     ],
     "paths": {
       "@/*": [

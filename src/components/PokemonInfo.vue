@@ -45,13 +45,13 @@
 			>
 				Show/Hide Moves
 			</a>
-			<ul
-				class="collapse"
-				id="pokemonMoves"
-				v-bind:key="move.move.name"
-				v-for="move in moves"
-			>
-				<li>{{ localize(move.move.names) }}</li>
+			<ul class="collapse" id="pokemonMoves">
+				<li v-if="movesLoading">Loading...</li>
+				<li v-if="movesError">An error occurred, please reload the page.</li>
+
+				<li v-bind:key="move.move.name" v-for="move in moves">
+					{{ localize(move.move.names) }}
+				</li>
 			</ul>
 		</article>
 	</div>
@@ -80,7 +80,9 @@ export default defineComponent({
 			evolutions: [] as PokemonSpecies[],
 			moves: [] as PokemonMove[],
 			abilities: '',
+			movesLoading: false,
 			loading: false,
+			movesError: false,
 			error: false,
 		}
 	},
@@ -103,10 +105,8 @@ export default defineComponent({
 		},
 		async fetchPokemon(name: string) {
 			let pokemon = document.querySelector('#pokemon')
-			// let pokemonMoves = document.querySelector('#pokemonMoves')
-			// if (pokemonMoves !== null) {
-			// 	new bootstrap.Collapse(pokemonMoves).hide()
-			// }
+			let pokemonMoves = document.querySelector('#pokemonMoves')
+			if (pokemonMoves !== null) pokemonMoves.classList.remove('show')
 
 			this.loading = true
 			try {
@@ -126,10 +126,22 @@ export default defineComponent({
 			}
 		},
 		async fetchEvolutions() {
+			this.evolutions = []
 			this.evolutions = await this.api.getEvolutions(this.basicInfo.species)
 		},
 		async fetchMoves(name: string) {
-			this.moves = await this.api.getMoves(name)
+			this.moves = []
+			this.movesLoading = true
+			this.movesError = false
+
+			try {
+				this.moves = await this.api.getMoves(name)
+			} catch (error) {
+				console.error('failed to load moves, error:', error)
+				this.movesError = true
+			} finally {
+				this.movesLoading = false
+			}
 		},
 	},
 	watch: {
