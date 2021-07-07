@@ -53,7 +53,7 @@ export default defineComponent({
 		},
 	},
 	mounted() {
-		fetch('https://pokeapi.co/api/v2/pokemon?limit=20')
+		fetch('https://pokeapi.co/api/v2/pokemon?limit=40&offset=20')
 			.then(response => {
 				return response.json()
 			})

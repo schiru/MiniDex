@@ -1,6 +1,6 @@
 import { createRouter, createWebHashHistory } from 'vue-router'
 import Home from '../views/Home.vue'
-import Pokemon from '../components/Pokemon.vue'
+import PokemonInfo from '../components/PokemonInfo.vue'
 
 const routes = [
 	{
@@ -11,7 +11,10 @@ const routes = [
 	{
 		path: '/pokemon/:name',
 		name: 'Pokemon',
-		component: Pokemon,
+		component: PokemonInfo,
+		props: {
+			lang: 'de' // could be made dynamic so that UI can show different languages
+		}
 	},
 ]
 

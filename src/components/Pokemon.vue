@@ -1,7 +1,7 @@
 <template>
 	<div class="detail-view position-fixed" id="pokemon">
 		<router-link to="/" style="position: sticky">Hide</router-link>
-		<h1>{{ $route.params.name }} (#{{ rawInfo.order }})</h1>
+		<h1>{{ pokemonName }} (#{{ rawInfo.order }})</h1>
 		<h1 v-if="error == true">I've got no pokemon for you today</h1>
 		<article v-else>
 			Abilities:
@@ -59,6 +59,7 @@
 
 <script lang="ts">
 import { defineComponent } from 'vue'
+import MiniPokedexAPI from '../api/MiniPokedexAPI'
 
 export default defineComponent({
 	name: 'HelloWorld',
@@ -67,7 +68,10 @@ export default defineComponent({
 	},
 	data() {
 		return {
+			api: new MiniPokedexAPI(),
 			info: '',
+			basicInfo: '',
+			pokemonName: 'test',
 			rawInfo: {
 				order: 42,
 				abilities: [
@@ -187,17 +191,40 @@ export default defineComponent({
 		},
 	},
 	watch: {
-		$route(to, from) {
+		async $route(to, from) {
 			from // avoid warining that `from` is unused
 			console.log('route destination changed')
 			if (typeof to.params.name === 'string') {
 				this.fetch_pokemon(to.params.name)
+
+				let a = this.api as MiniPokedexAPI
+				let baseInfo = await a.getBasicInfo(this.$route.params.name)
+				this.baseInfo = baseInfo
+
+				for (let name of baseInfo.species.names) {
+					if (name.language.name == 'de') {
+						console.log('found name', name.language.name)
+						this.pokemonName = name.name
+					}
+				}
 			}
 		},
 	},
-	mounted() {
+	async mounted() {
 		if (typeof this.$route.params.name === 'string') {
 			this.fetch_pokemon(this.$route.params.name)
+
+			let a = this.api as MiniPokedexAPI
+			let baseInfo = await a.getBasicInfo(this.$route.params.name)
+			this.baseInfo = baseInfo
+
+			for (let name of baseInfo.species.names) {
+				if (name.language.name == 'de') {
+					console.log('found name', name.language.name)
+					this.pokemonName = name.name
+				}
+			}
+			// console.log('base info:', baseInfo)
 		} else {
 			this.error = true
 		}
