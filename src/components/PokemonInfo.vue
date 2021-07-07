@@ -1,40 +1,54 @@
 <template>
-	<div class="detail-view position-fixed" id="pokemon">
-		<router-link to="/" style="position: sticky">Hide</router-link>
+	<div ref="self" class="detail-view position-fixed" id="pokemon">
+		<router-link
+			id="pokemon-hide-button"
+			to="/"
+			aria-label="Back to pokemon list"
+		></router-link>
 		<h1 v-if="loading === true">Loading...</h1>
 		<h1 v-if="error == true">I've got no pokemon for you today</h1>
 		<article v-else-if="basicInfo !== null">
+			<p class="pokemon-image">
+				<img v-bind:src="basicInfo.sprites.front_default" />
+			</p>
+
+			<p></p>
+
 			<h1>
 				{{ localize(basicInfo.species.names) }} (#{{ basicInfo.orderNumber }})
 			</h1>
-			Abilities:
-			<ul
-				v-bind:key="ability.ability.name"
-				v-for="ability in basicInfo.abilities"
-			>
-				<li>{{ localize(ability.ability.names) }}</li>
-			</ul>
 
-			Types:
-			<ul v-bind:key="type" v-for="type in basicInfo.types">
-				<li>{{ localize(type.type.names) }}</li>
-			</ul>
-
-			Stats:
-			<ul v-bind:key="stat" v-for="stat in basicInfo.stats">
-				<li>
-					{{ localize(stat.stat.names) }}, base: {{ stat.base_stat }}, effort:
-					{{ stat.effort }}
+			<ul class="pokemon-types">
+				<li v-bind:key="type" v-for="type in basicInfo.types">
+					{{ localize(type.type.names) }}
 				</li>
 			</ul>
 
-			Evolutions:
-			<ul v-bind:key="species.name" v-for="species in evolutions">
-				<li>
+			<table>
+				<tr v-bind:key="stat" v-for="stat in basicInfo.stats">
+					<td>{{ localize(stat.stat.names) }}</td>
+					<td>{{ stat.base_stat }}</td>
+				</tr>
+			</table>
+
+			<h2>Abilities</h2>
+			<ul>
+				<li
+					v-bind:key="ability.ability.name"
+					v-for="ability in basicInfo.abilities"
+				>
+					{{ localize(ability.ability.names) }}
+				</li>
+			</ul>
+
+			<h2>Evolutions</h2>
+			<ul>
+				<li v-bind:key="species.name" v-for="species in evolutions">
 					{{ localize(species.names) }}
 				</li>
 			</ul>
 
+			<h2>Moves</h2>
 			<a
 				class="btn btn-primary"
 				data-bs-toggle="collapse"
@@ -143,6 +157,18 @@ export default defineComponent({
 				this.movesLoading = false
 			}
 		},
+		changeSizeToFitParent() {
+			const selfNode = this.$refs.self
+			if (selfNode !== null && selfNode.parentNode !== null) {
+				console.log('setting width', this.$refs.bla)
+				let dimensions = getComputedStyle(selfNode.parentNode)
+				let innerWidth =
+					selfNode.parentNode.clientWidth -
+					parseInt(dimensions.paddingLeft) -
+					parseInt(dimensions.paddingRight)
+				selfNode.style.width = innerWidth + 'px'
+			}
+		},
 	},
 	watch: {
 		$route(to, from) {
@@ -160,9 +186,70 @@ export default defineComponent({
 		} else {
 			this.error = true
 		}
+
+		this.changeSizeToFitParent()
+		window.addEventListener('resize', () => {
+			this.changeSizeToFitParent()
+		})
+
+		console.log('REFS', this.$refs.self)
 	},
 })
 </script>
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
-<style scoped></style>
+<style scoped>
+#pokemon-hide-button {
+	position: fixed;
+	top: 20px;
+	right: 30px;
+	text-decoration: none;
+	font-weight: bold;
+	color: black;
+	width: 32px;
+	height: 32px;
+	margin: 0;
+	padding: 0;
+	background-image: url('../assets/iconmonstr-x-mark.png');
+	background-size: 32px;
+	background-repeat: no-repeat;
+}
+
+p.pokemon-image {
+	padding-top: 50px;
+	text-align: center;
+}
+
+h1 {
+	text-align: center;
+}
+
+h2 {
+	text-align: center;
+	font-size: 1.5em;
+	margin-top: 30px;
+}
+
+.pokemon-types {
+	list-style-type: none;
+	text-align: center;
+}
+
+.pokemon-types li {
+	display: inline-block;
+	padding: 3px 10px;
+	margin: 5px;
+	border: 1px solid black;
+	border-radius: 5px;
+}
+
+table {
+	width: 100%;
+	margin: 10px 0;
+	padding: 20px;
+}
+
+table tr td:nth-child(2) {
+	text-align: right;
+}
+</style>

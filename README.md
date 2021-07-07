@@ -7,6 +7,9 @@ TODO:
 - add unit tests
 - add attribution to pokeapi-js-wrapper
 - update readme
+- make loading prettier / fix error text overlapping "hide" button
+- improve performance - decrease requests and/or parallelize
+- add pagination
 
 Features:
 

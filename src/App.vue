@@ -1,21 +1,27 @@
 <template>
 	<div class="row">
-		<div class="col-sm-12 col-md-7" style="border: 1px solid blue">
+		<div class="col-sm-12 col-md-7">
+			<h1>MiniDex</h1>
 			<Search @search="performSearch" textValue=""></Search>
-			<div class="pokemon-list">
-				<div :key="pokemon" v-for="pokemon in filteredPokemon">
+			<div id="pokemon-list">
+				<div
+					class="pokemon-list-item"
+					:key="pokemon"
+					v-for="pokemon in filteredPokemon"
+				>
+					<img v-bind:src="pokemon.url" loading="lazy" />
+
 					<router-link
 						v-bind:to="{
 							name: 'Pokemon',
-							params: { name: pokemon.name },
+							params: { name: pokemon.identifierName },
 						}"
 						>{{ pokemon.name }}</router-link
 					>
-					<img v-bind:src="pokemon.url" loading="lazy" />
 				</div>
 			</div>
 		</div>
-		<div class="col-sm-12 col-md-5" style="border: 1px solid green">
+		<div id="sidebar" class="col-sm-12 col-md-5">
 			<router-view />
 		</div>
 	</div>
@@ -23,6 +29,7 @@
 
 <script>
 import { defineComponent } from 'vue'
+import MiniPokedexAPI from './api/MiniPokedexAPI'
 import Search from './components/Search.vue'
 
 export default defineComponent({
@@ -32,8 +39,9 @@ export default defineComponent({
 	},
 	data() {
 		return {
-			pokemons: ['pikatchu'],
+			pokemons: [],
 			filterText: '',
+			api: new MiniPokedexAPI(),
 		}
 	},
 	computed: {
@@ -53,27 +61,44 @@ export default defineComponent({
 		},
 	},
 	mounted() {
-		fetch('https://pokeapi.co/api/v2/pokemon?limit=40&offset=20')
+		fetch('https://pokeapi.co/api/v2/pokemon?limit=100&offset=60')
 			.then(response => {
 				return response.json()
 			})
 			.then(json => {
 				console.log('fetched', json)
-				let count = 1
-				this.pokemons = json.results.map(pokemon => {
-					return {
-						index: count,
-						url: `https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/${count++}.png`,
-						name: pokemon.name,
-					}
+				const _this = this
+				json.results.forEach(pokemon => {
+					this.api.getBasicInfo(pokemon.name).then(info => {
+						_this.pokemons.push({
+							// index: count,
+							url: `https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/${info.species.id}.png`,
+							name: info.species.names[5].name,
+							identifierName: pokemon.name,
+						})
+					})
 				})
 			})
-		this.pokemons = ['relaxo', 'albert']
 	},
 })
 </script>
 
 <style>
+#pokemon-list {
+	display: flex;
+	flex-wrap: wrap;
+}
+
+.pokemon-list-item {
+	flex-basis: 33%;
+}
+
+.pokemon-list-item img {
+	width: 48px;
+	height: 48px;
+	margin: 5px;
+}
+
 .detail-view {
 	/* border: 2px solid fuchsia !important; */
 	top: 0px;
@@ -93,6 +118,10 @@ export default defineComponent({
 		bottom: 0px;
 		right: 0px;
 		padding: 20px;
+	}
+
+	.pokemon-list-item {
+		flex-basis: 100%;
 	}
 }
 </style>

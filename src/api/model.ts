@@ -102,9 +102,18 @@ export type PokemonSpecies = {
 	evolution_chain: { url: string }
 }
 
+/**
+ * Contains URLs to images of the pokemon
+ */
+export type PokemonSprites = {
+	front_default: string
+	// can be extended
+}
+
 export interface PokemonBasicInfo {
 	orderNumber: number
 	species: PokemonSpecies
+	sprites: PokemonSprites
 	stats: [PokemonStat]
 	types: [PokemonType]
 	abilities: [PokemonAbility]

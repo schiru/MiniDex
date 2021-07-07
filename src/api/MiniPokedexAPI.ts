@@ -4,11 +4,13 @@ import * as Model from "./model"
 const P = new Pokedex()
 
 export default class MiniPokedexAPI {
+
 	async getBasicInfo(name: string): Promise<Model.PokemonBasicInfo> {
 		const pokemon = await P.getPokemonByName(name)
 
 		console.log('POKEMON', pokemon)
 
+		const sprites = pokemon.sprites
 		const species = await P.getPokemonSpeciesByName(pokemon.species.name) as Model.PokemonSpecies
 		const stats = await this.resolveStats(pokemon.stats)
 		const types = await this.resolveTypes(pokemon.types)
@@ -21,6 +23,7 @@ export default class MiniPokedexAPI {
 
 		return {
 			orderNumber: pokemon.order,
+			sprites,
 			species,
 			stats,
 			types,
