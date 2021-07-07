@@ -1,6 +1,9 @@
 <template>
 	<div ref="self" class="detail-view position-fixed" id="pokemon">
+		<!-- class d-md-none hides button on all size classes larger than or equal to medium
+			source: https://getbootstrap.com/docs/5.0/utilities/display/ -->
 		<router-link
+			class="d-md-none"
 			id="pokemon-hide-button"
 			to="/"
 			aria-label="Back to pokemon list"
@@ -133,7 +136,7 @@ export default defineComponent({
 			}
 
 			this.fetchEvolutions()
-			this.fetchMoves(name)
+			// this.fetchMoves(name)
 
 			if (pokemon != null) {
 				pokemon.scrollTop = 0
@@ -160,6 +163,11 @@ export default defineComponent({
 		changeSizeToFitParent() {
 			const selfNode = this.$refs.self
 			if (selfNode !== null && selfNode.parentNode !== null) {
+				if (window.innerWidth < 768) {
+					selfNode.style.width = 'inherit'
+					return
+				}
+
 				console.log('setting width', this.$refs.bla)
 				let dimensions = getComputedStyle(selfNode.parentNode)
 				let innerWidth =
@@ -199,10 +207,14 @@ export default defineComponent({
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style scoped>
+#pokemon {
+	padding: 20px;
+}
+
 #pokemon-hide-button {
 	position: fixed;
 	top: 20px;
-	right: 30px;
+	right: 20px;
 	text-decoration: none;
 	font-weight: bold;
 	color: black;
@@ -233,6 +245,7 @@ h2 {
 .pokemon-types {
 	list-style-type: none;
 	text-align: center;
+	padding: 0;
 }
 
 .pokemon-types li {

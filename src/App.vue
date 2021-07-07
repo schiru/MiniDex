@@ -73,7 +73,7 @@ export default defineComponent({
 						_this.pokemons.push({
 							// index: count,
 							url: `https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/${info.species.id}.png`,
-							name: info.species.names[5].name,
+							name: info.species.names[7].name,
 							identifierName: pokemon.name,
 						})
 					})
@@ -93,6 +93,10 @@ export default defineComponent({
 	flex-basis: 33%;
 }
 
+.pokemon-list-item a {
+	color: black;
+}
+
 .pokemon-list-item img {
 	width: 48px;
 	height: 48px;
@@ -104,14 +108,15 @@ export default defineComponent({
 	top: 0px;
 	bottom: 0px;
 	overflow: scroll;
-	padding-right: 20px;
 	margin-right: 10px;
+	background-color: #f8f8f8; /* rgba(255, 255, 255, 0.4); */
 }
 
 @media screen and (max-width: 767px) {
 	.detail-view {
+		background-color: #fff; /* rgba(255, 255, 255, 0.4); */
+
 		overflow: scroll;
-		background-color: white; /* rgba(255, 255, 255, 0.4); */
 		position: fixed;
 		top: 0px !important;
 		left: 0px;
