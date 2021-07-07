@@ -45,8 +45,12 @@
 			</ul>
 
 			<h2>Evolutions</h2>
-			<ul>
-				<li v-bind:key="species.name" v-for="species in evolutions">
+			<ul class="pokemon-evolutions">
+				<li
+					v-bind:class="{ current: species.name == basicInfo.species.name }"
+					v-bind:key="species.name"
+					v-for="species in evolutions"
+				>
 					{{ localize(species.names) }}
 				</li>
 			</ul>
@@ -254,6 +258,24 @@ h2 {
 	margin: 5px;
 	border: 1px solid black;
 	border-radius: 5px;
+}
+
+ul.pokemon-evolutions {
+	display: flex;
+	list-style-type: none;
+	margin: 0;
+	margin-top: 20px;
+	padding: 0;
+}
+
+.pokemon-evolutions li {
+	flex-grow: 1;
+	flex-basis: 0;
+	text-align: center;
+}
+
+.pokemon-evolutions li.current {
+	font-weight: bold;
 }
 
 table {
