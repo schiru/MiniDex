@@ -39,7 +39,8 @@
 			</p>
 
 			<h1>
-				{{ localize(basicInfo.species.names) }} (#{{ basicInfo.orderNumber }})
+				{{ localize(basicInfo.species.names) }}
+				<span class="order-number">#{{ basicInfo.orderNumber }}</span>
 			</h1>
 
 			<ul class="pokemon-types">
@@ -236,6 +237,11 @@ export default defineComponent({
 <style scoped>
 #pokemon {
 	padding: 20px;
+}
+
+.order-number {
+	color: #888;
+	padding-left: 5px;
 }
 
 #pokemon-hide-button {

@@ -1,13 +1,19 @@
 <template>
 	<div class="row">
 		<div class="col-sm-12 col-md-7">
-			<h1>MiniDex</h1>
-			<Search
-				@search="performSearch"
-				placeholderText="Filter by Name"
-				textValue=""
-			></Search>
-			<div id="pokemon-list">
+			<header class="row align-items-end">
+				<div class="col">
+					<h1 style="float: left">MiniDex</h1>
+				</div>
+				<div class="col-12 col-sm-6 col-lg-5 col-xl-4 pokemon-filter">
+					<Search
+						@search="performSearch"
+						placeholderText="Filter by Name"
+						textValue=""
+					></Search>
+				</div>
+			</header>
+			<div class="row" id="pokemon-list">
 				<router-link
 					v-bind:to="{
 						name: 'Pokemon',
@@ -180,10 +186,28 @@ export default defineComponent({
 })
 </script>
 
+<style scoped>
+header {
+	margin: 20px 0 15px 0;
+	padding-left: 10px;
+}
+
+header h1 {
+	margin: 0;
+	font-size: 3em;
+}
+
+.pokemon-filter {
+	text-align: right;
+	padding: 10px;
+}
+</style>
+
 <style>
 #pokemon-list {
 	display: flex;
 	flex-wrap: wrap;
+	padding-left: 10px;
 }
 
 #pokemon-list-bottom-info {

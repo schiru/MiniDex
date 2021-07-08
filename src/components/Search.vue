@@ -1,13 +1,13 @@
 <template>
-	<p>
-		<input
-			@input="onSearch"
-			:placeholder="placeholderText"
-			v-model="searchText"
-			type="text"
-		/>
-		<!-- {{ searchText }} -->
-	</p>
+	<input
+		class="form-control"
+		type="search"
+		aria-label="Search"
+		@input="onSearch"
+		:placeholder="placeholderText"
+		v-model="searchText"
+	/>
+	<!-- {{ searchText }} -->
 </template>
 
 <script lang="ts">

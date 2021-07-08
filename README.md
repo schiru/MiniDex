@@ -1,12 +1,11 @@
 # pokedex
 
 TODO:
-- add unit tests
 - add attribution to pokeapi-js-wrapper
 - update readme
-- remove console.logs
 
 Features:
+- Fully responsive design
 - Prepared to be localized
 - Dependencies contain critial warnings
 - First vue project
