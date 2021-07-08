@@ -1,7 +1,7 @@
 import * as Model from "./model"
 import PokedexAPI from "./PokedexAPI"
 import { Pokedex } from "pokeapi-js-wrapper"
-import Constants from "@/Constants"
+import Constants from "../Constants"
 
 const debug = Constants.debug
 
