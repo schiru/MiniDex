@@ -85,6 +85,7 @@ import { defineComponent } from 'vue'
 import PokedexAPIFactory from './api/PokedexAPIFactory'
 import { Name } from '@/api/model'
 import Search from './components/Search.vue'
+import Constants from './Constants'
 
 export default defineComponent({
 	name: 'App',
@@ -99,7 +100,7 @@ export default defineComponent({
 			pokemonCount: 50,
 			loadMoreCount: 50,
 			api: PokedexAPIFactory.getPokedexAPI(),
-			lang: 'de',
+			lang: Constants.lang,
 			error: false,
 			isLoading: false,
 			loadedAll: false,
