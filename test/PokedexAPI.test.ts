@@ -1,4 +1,3 @@
-import MiniPokedexAPI from '../src/api/SimplePokedexAPI'
 import * as Model from '../src/api/model'
 import PokedexAPIFactory from '../src/api/PokedexAPIFactory'
 
