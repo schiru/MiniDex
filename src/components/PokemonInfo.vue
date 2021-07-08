@@ -1,5 +1,26 @@
 <template>
-	<div ref="self" class="detail-view position-fixed" id="pokemon">
+	<div
+		v-bind:class="{ 'd-none': noPokemonSelected }"
+		ref="self"
+		class="detail-view position-fixed d-md-block"
+		id="pokemon"
+	>
+		<div v-if="noPokemonSelected" class="no-pokemon-selected">
+			<p>Please select a Pokemon to see details here</p>
+		</div>
+		<button
+			v-if="loading === true"
+			class="loading-pokemon btn btn-light"
+			type="button"
+			disabled
+		>
+			<span
+				class="spinner-border spinner-border-sm"
+				role="status"
+				aria-hidden="true"
+			></span>
+			<span class="visually-hidden">Updating...</span>
+		</button>
 		<!-- class d-md-none hides button on all size classes larger than or equal to medium
 			source: https://getbootstrap.com/docs/5.0/utilities/display/ -->
 		<router-link
@@ -8,11 +29,10 @@
 			to="/"
 			aria-label="Back to pokemon list"
 		></router-link>
-		<h1 v-if="loading === true">Loading...</h1>
-		<h1 v-if="error == true">
+		<p class="error" v-if="error == true">
 			Failed to load Pokemon, please try again later.
-		</h1>
-		<article v-else-if="basicInfo !== null">
+		</p>
+		<article v-else-if="basicInfo !== null && !noPokemonSelected">
 			<p class="pokemon-image">
 				<img v-bind:src="basicInfo.sprites.front_default" />
 			</p>
@@ -98,6 +118,7 @@ export default defineComponent({
 	},
 	data() {
 		return {
+			noPokemonSelected: false,
 			api: new MiniPokedexAPI(),
 			basicInfo: null as PokemonBasicInfo,
 			evolutions: [] as PokemonSpecies[],
@@ -178,16 +199,20 @@ export default defineComponent({
 			from // avoid warining that `from` is unused
 			console.log('route destination changed')
 			if (typeof to.params.name === 'string') {
+				this.noPokemonSelected = false
 				this.fetchPokemon(to.params.name)
+			} else {
+				this.noPokemonSelected = true
 			}
 		},
 	},
 	async mounted() {
 		console.log('route destination changed')
 		if (typeof this.$route.params.name === 'string') {
+			this.noPokemonSelected = false
 			this.fetchPokemon(this.$route.params.name)
 		} else {
-			this.error = true
+			this.noPokemonSelected = true
 		}
 
 		this.changeSizeToFitParent()
@@ -222,13 +247,54 @@ export default defineComponent({
 	background-repeat: no-repeat;
 }
 
-p.pokemon-image {
-	padding-top: 50px;
+div.no-pokemon-selected {
+	top: 50%;
+	left: 0;
+	right: 0;
 	text-align: center;
+	position: absolute;
+}
+
+.loading-pokemon {
+	position: absolute;
+	transform: translate(-50%, -50%);
+	left: 50%;
+	top: 200px;
+	/* bottom: 30px; */
+	/* right: 30px; */
+}
+
+p.pokemon-image {
+	padding: 0;
+	margin: 0;
+	text-align: center;
+}
+
+/** Makes image big and pixely */
+p.pokemon-image img {
+	height: 300px;
+	width: 300px;
+
+	image-rendering: optimizeSpeed; /* STOP SMOOTHING, GIVE ME SPEED  */
+	image-rendering: -moz-crisp-edges; /* Firefox                        */
+	image-rendering: -o-crisp-edges; /* Opera                          */
+	image-rendering: -webkit-optimize-contrast; /* Chrome (and eventually Safari) */
+	image-rendering: pixelated; /* Chrome */
+	image-rendering: optimize-contrast; /* CSS3 Proposed                  */
+	-ms-interpolation-mode: nearest-neighbor; /* IE8+ */
 }
 
 h1 {
 	text-align: center;
+}
+
+p.error {
+	position: absolute;
+	top: 50%;
+	left: 0;
+	right: 0;
+	padding: 50px;
+	transform: translateY(-50%);
 }
 
 h2 {

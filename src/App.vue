@@ -8,21 +8,28 @@
 				textValue=""
 			></Search>
 			<div id="pokemon-list">
-				<div
-					class="pokemon-list-item"
+				<router-link
+					v-bind:to="{
+						name: 'Pokemon',
+						params: { name: pokemon.species.name },
+					}"
+					custom
 					:key="pokemon"
 					v-for="pokemon in filteredPokemon"
+					v-slot="{ navigate }"
 				>
-					<img v-bind:src="pokemon.sprites.front_default" loading="lazy" />
-
-					<router-link
-						v-bind:to="{
-							name: 'Pokemon',
-							params: { name: pokemon.species.name },
+					<div
+						class="pokemon-list-item"
+						v-bind:class="{
+							selected: pokemon.species.name == selectedPokemonName,
 						}"
-						>{{ localize(pokemon.species.names) }}</router-link
+						@click="navigate"
 					>
-				</div>
+						<img v-bind:src="pokemon.sprites.front_default" loading="lazy" />
+
+						{{ localize(pokemon.species.names) }}
+					</div>
+				</router-link>
 			</div>
 
 			<div id="pokemon-list-bottom-info">
@@ -33,7 +40,7 @@
 				<span v-if="!loadedAll && !error">
 					<button
 						@click="loadMore()"
-						class="btn btn-primary"
+						class="btn btn-warning pokemon-list-loading-button"
 						type="button"
 						:disabled="isLoading"
 					>
@@ -46,10 +53,9 @@
 						{{ loadingButtonText }}
 					</button>
 					<span v-if="!isLoading">
-						or
 						<button
 							@click="loadAll()"
-							class="btn btn-primary"
+							class="btn btn-warning pokemon-list-loading-button"
 							type="button"
 							:disabled="isLoading"
 						>
@@ -85,11 +91,12 @@ export default defineComponent({
 	data() {
 		return {
 			pokemons: [],
+			selectedPokemonName: '',
 			filterText: '',
 			pokemonCount: 50,
 			loadMoreCount: 50,
 			api: new MiniPokedexAPI(),
-			lang: 'en',
+			lang: 'de',
 			error: false,
 			isLoading: false,
 			loadedAll: false,
@@ -152,6 +159,12 @@ export default defineComponent({
 			const diff = to - from
 			this.fetchPokemon(from, diff)
 		},
+		$route(to) {
+			const selectedPokemon = to.params.name
+			if (typeof selectedPokemon === 'string') {
+				this.selectedPokemonName = selectedPokemon
+			}
+		},
 	},
 	mounted() {
 		this.fetchPokemon(0, this.pokemonCount)
@@ -170,12 +183,27 @@ export default defineComponent({
 	padding: 30px;
 }
 
+.pokemon-list-loading-button {
+	margin: 10px;
+}
+
 .pokemon-list-item {
 	flex-basis: 33%;
+	border-radius: 10px;
+	cursor: pointer;
+}
+
+.pokemon-list-item:hover {
+	background: #f4f4f4;
+}
+
+.pokemon-list-item.selected {
+	background: #eee;
 }
 
 .pokemon-list-item a {
 	color: black;
+	text-decoration-line: none;
 }
 
 .pokemon-list-item img {

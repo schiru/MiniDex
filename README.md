@@ -20,7 +20,7 @@ Features:
 
 Improvements:
 - i18n
-- Add server that pre-fetches data
+- Add server that pre-fetches data -> drastically improve performance
 
 ## Project setup
 ```

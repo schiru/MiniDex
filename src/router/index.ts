@@ -6,14 +6,16 @@ const routes = [
 	{
 		path: '/',
 		name: 'Home',
-		component: Home,
-	},
+		component: PokemonInfo,
+		props: {
+			lang: 'de' // could be made dynamic so that UI can show different languages
+		}	},
 	{
 		path: '/pokemon/:name',
 		name: 'Pokemon',
 		component: PokemonInfo,
 		props: {
-			lang: 'en' // could be made dynamic so that UI can show different languages
+			lang: 'de' // could be made dynamic so that UI can show different languages
 		}
 	},
 ]

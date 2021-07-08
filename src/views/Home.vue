@@ -1,18 +1,20 @@
 <template>
-	<div class="home">
-		<img alt="Vue logo" src="../assets/logo.png" />
-		<HelloWorld msg="Welcome to Your Vue.js + TypeScript App" />
+	<div class="no-pokemon-selected">
+		<p>Please select a Pokemon to see details here</p>
 	</div>
 </template>
 
 <script lang="ts">
 import { defineComponent } from 'vue'
-import HelloWorld from '@/components/HelloWorld.vue' // @ is an alias to /src
 
 export default defineComponent({
 	name: 'Home',
-	components: {
-		HelloWorld,
-	},
 })
 </script>
+
+<style scoped>
+div.no-pokemon-selected {
+	top: 50%;
+	position: fixed;
+}
+</style>
