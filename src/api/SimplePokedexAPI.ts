@@ -13,27 +13,19 @@ export default class SimplePokedexAPI implements PokedexAPI {
 	}
 
 	async getPokemonList(offset: number = 0, limit = 10000): Promise<Model.PokemonBasicInfo[]> {
-		const unresolvedPokemonList = (await this.P.getPokemonsList({ offset, limit })).results
+		const fetchedInfos = await (await fetch('pokedex_minimal.json.min')).json() as Model.PokemonBasicInfo[]
 
-		debug && console.log('UNRESOLVED', unresolvedPokemonList)
+		debug && console.log('fetched', fetchedInfos)
+		debug && console.log(JSON.stringify(fetchedInfos))
 
-		const fetchedInfos = await Promise.all(
-			unresolvedPokemonList.map(pokemon => {
-				return this.getBasicInfo(pokemon.name, false)
-			}) as Promise<Model.PokemonBasicInfo>[]
-		)
-
-		const sortedByOrderNumber = fetchedInfos.sort(
-			(a, b) => a.orderNumber - b.orderNumber
-		)
-
-		return sortedByOrderNumber
+		return fetchedInfos
 	}
 
 	async getBasicInfo(name: string, fetchCharacteristics: boolean = true): Promise<Model.PokemonBasicInfo> {
 		const pokemon = await this.P.getPokemonByName(name)
 
 		debug && console.log('POKEMON', pokemon)
+
 
 		const sprites = pokemon.sprites
 		const species = await this.P.getPokemonSpeciesByName(pokemon.species.name) as Model.PokemonSpecies
@@ -49,6 +41,8 @@ export default class SimplePokedexAPI implements PokedexAPI {
 		}
 
 		return {
+			id: pokemon.id,
+			is_default: pokemon.is_default,
 			orderNumber: pokemon.order,
 			sprites,
 			species,

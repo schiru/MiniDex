@@ -107,6 +107,8 @@ export type PokemonSprites = {
 }
 
 export interface PokemonBasicInfo {
+	id: number
+	is_default: boolean
 	orderNumber: number
 	species: PokemonSpecies
 	sprites: PokemonSprites

@@ -46,13 +46,12 @@
 					An error occurred while fetching Pokemon, please reload the page to
 					try again.
 				</p>
-				<p v-if="!isLoading && !loadedAll">{{ pokemonCount }} Pokemon loaded</p>
-				<span v-if="!loadedAll && !error">
+				<p v-if="!isLoading">Showing {{ pokemonCount }} Pokemon</p>
+				<span v-if="isLoading">
 					<button
-						@click="loadMore()"
 						class="btn btn-warning pokemon-list-loading-button"
 						type="button"
-						:disabled="isLoading"
+						disabled
 					>
 						<span
 							class="spinner-border spinner-border-sm"
@@ -62,22 +61,6 @@
 						></span>
 						{{ loadingButtonText }}
 					</button>
-					<span v-if="!isLoading">
-						<button
-							@click="loadAll()"
-							class="btn btn-warning pokemon-list-loading-button"
-							type="button"
-							:disabled="isLoading"
-						>
-							<span
-								class="spinner-border spinner-border-sm"
-								role="status"
-								aria-hidden="true"
-								v-if="isLoading"
-							></span>
-							Load all (takes a while)
-						</button>
-					</span>
 				</span>
 			</div>
 		</div>
@@ -104,13 +87,10 @@ export default defineComponent({
 			pokemons: [],
 			selectedPokemonName: '',
 			filterText: '',
-			pokemonCount: 50,
-			loadMoreCount: 50,
 			api: PokedexAPIFactory.getPokedexAPI(),
 			lang: Constants.lang,
 			error: false,
 			isLoading: false,
-			loadedAll: false,
 		}
 	},
 	computed: {
@@ -143,25 +123,11 @@ export default defineComponent({
 			console.log('input changed', val)
 			this.filterText = val
 		},
-		loadMore() {
-			this.pokemonCount += this.loadMoreCount
-		},
-		async loadAll() {
-			try {
-				await this.fetchPokemon(this.pokemonCount, 10000)
-			} catch (error) {
-				console.log('failed to load all pokemon, error', error)
-				this.error = true
-				return
-			}
-
-			this.loadedAll = true
-		},
 		async fetchPokemon(offset, count) {
 			this.isLoading = true
 			try {
-				const morePokemon = await this.api.getPokemonList(offset, count)
-				this.pokemons = this.pokemons.concat(morePokemon)
+				this.pokemons = await this.api.getPokemonList(offset, count)
+				this.pokemonCount = this.pokemons.length
 			} catch (error) {
 				console.error('failed to fetch pokemon list, error: ', error)
 				this.error = true

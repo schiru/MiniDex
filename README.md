@@ -9,6 +9,7 @@ TODO:
 - update readme
 - add picutres to readme
 - publish app on render.com
+- remove helloworld stuff
 
 Features:
 - Fully responsive design
