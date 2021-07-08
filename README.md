@@ -1,26 +1,22 @@
 # pokedex
 
 TODO:
-- order pokemno by name
-- show image
-- add CSS
 - add unit tests
 - add attribution to pokeapi-js-wrapper
 - update readme
-- make loading prettier / fix error text overlapping "hide" button
-- improve performance - decrease requests and/or parallelize
-- add pagination
+- remove console.logs
 
 Features:
-
-- Localizable
+- Prepared to be localized
 - Dependencies contain critial warnings
 - First vue project
-- Search for pokemon
+- Filter pokemon
 
 Improvements:
 - i18n
-- Add server that pre-fetches data -> drastically improve performance
+- Add server that pre-fetches, caches and bundles data into one request -> drastically improve performance
+- Dependency injection
+- More components
 
 ## Project setup
 ```
