@@ -82,7 +82,7 @@
 
 <script lang="ts">
 import { defineComponent } from 'vue'
-import MiniPokedexAPI from './api/MiniPokedexAPI'
+import PokedexAPIFactory from './api/PokedexAPIFactory'
 import { Name } from '@/api/model'
 import Search from './components/Search.vue'
 
@@ -98,7 +98,7 @@ export default defineComponent({
 			filterText: '',
 			pokemonCount: 50,
 			loadMoreCount: 50,
-			api: new MiniPokedexAPI(),
+			api: PokedexAPIFactory.getPokedexAPI(),
 			lang: 'de',
 			error: false,
 			isLoading: false,

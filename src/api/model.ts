@@ -25,7 +25,7 @@ export type PokemonStatInfo = {
 	/**
 	 * names in different languages
 	 */
-	names: [Name]
+	names: Name[]
 	// could be extended
 }
 
@@ -43,7 +43,7 @@ export type PokemonTypeInfo = {
 	/**
 	 * names in different languages
 	 */
-	names: [Name]
+	names: Name[]
 	// could be extended
 }
 
@@ -62,7 +62,7 @@ export type PokemonAbilityInfo = {
 	/**
 	 * names in different languages
 	 */
-	names: [Name]
+	names: Name[]
 	// could be extended
 }
 
@@ -75,7 +75,7 @@ export type PokemonMove = {
 	/**
 	 * names in different languages
 	 */
-	names: [Name]
+	names: Name[]
 	// could be extended
 }
 
@@ -84,7 +84,7 @@ export type Evolution = {
 	 * the identifying name on pokeapi
 	 */
 	name: string,
-	names: [Name],
+	names: Name[],
 }
 
 export type EvolutionChainLink = {
@@ -94,7 +94,7 @@ export type EvolutionChainLink = {
 
 export type PokemonSpecies = {
 	name: string
-	names: [Name]
+	names: Name[]
 	evolution_chain: { url: string }
 }
 

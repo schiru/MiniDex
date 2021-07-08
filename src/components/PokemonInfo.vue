@@ -82,7 +82,7 @@
 					@click="fetchMoves"
 					class="btn btn-warning"
 					type="button"
-					:disabled="isLoading"
+					:disabled="movesLoading"
 				>
 					<span
 						class="spinner-border spinner-border-sm"
@@ -115,7 +115,7 @@ import {
 	PokemonMove,
 } from '@/api/model'
 import { defineComponent } from 'vue'
-import MiniPokedexAPI from '../api/MiniPokedexAPI'
+import PokedexAPIFactory from '../api/PokedexAPIFactory'
 
 export default defineComponent({
 	name: 'PokemonInfo',
@@ -126,7 +126,7 @@ export default defineComponent({
 	data() {
 		return {
 			noPokemonSelected: false,
-			api: new MiniPokedexAPI(),
+			api: PokedexAPIFactory.getPokedexAPI(),
 			basicInfo: null as PokemonBasicInfo,
 			evolutions: [] as PokemonSpecies[],
 			moves: [] as PokemonMove[],
@@ -199,7 +199,6 @@ export default defineComponent({
 					return
 				}
 
-				console.log('setting width', this.$refs.bla)
 				let dimensions = getComputedStyle(selfNode.parentNode)
 				let innerWidth =
 					selfNode.parentNode.clientWidth -
@@ -208,34 +207,27 @@ export default defineComponent({
 				selfNode.style.width = innerWidth + 'px'
 			}
 		},
-	},
-	watch: {
-		$route(to, from) {
-			from // avoid warining that `from` is unused
-			console.log('route destination changed')
-			if (typeof to.params.name === 'string') {
+		reload(pokemonName: any) {
+			if (typeof pokemonName === 'string') {
 				this.noPokemonSelected = false
-				this.fetchPokemon(to.params.name)
+				this.fetchPokemon(pokemonName)
 			} else {
 				this.noPokemonSelected = true
 			}
 		},
 	},
+	watch: {
+		$route(to) {
+			this.reload(to.params.name)
+		},
+	},
 	async mounted() {
-		console.log('route destination changed')
-		if (typeof this.$route.params.name === 'string') {
-			this.noPokemonSelected = false
-			this.fetchPokemon(this.$route.params.name)
-		} else {
-			this.noPokemonSelected = true
-		}
+		this.reload(this.$route.params.name)
 
 		this.changeSizeToFitParent()
 		window.addEventListener('resize', () => {
 			this.changeSizeToFitParent()
 		})
-
-		console.log('REFS', this.$refs.self)
 	},
 })
 </script>
