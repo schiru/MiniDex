@@ -35,10 +35,8 @@
 		</p>
 		<article v-else-if="basicInfo !== null && !noPokemonSelected">
 			<p class="pokemon-image">
-				<img v-bind:src="basicInfo.sprites.front_default" />
+				<img alt="Pokemon Image" v-bind:src="basicInfo.sprites.front_default" />
 			</p>
-
-			<p></p>
 
 			<h1>
 				{{ localize(basicInfo.species.names) }} (#{{ basicInfo.orderNumber }})
@@ -305,6 +303,7 @@ h1 {
 
 p.error {
 	position: absolute;
+	text-align: center;
 	top: 50%;
 	left: 0;
 	right: 0;

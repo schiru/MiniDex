@@ -28,6 +28,9 @@
 						<img v-bind:src="pokemon.sprites.front_default" loading="lazy" />
 
 						{{ localize(pokemon.species.names) }}
+						<span class="pokemon-list-item-order-number"
+							>#{{ pokemon.orderNumber }}</span
+						>
 					</div>
 				</router-link>
 			</div>
@@ -212,6 +215,11 @@ export default defineComponent({
 	margin: 5px;
 }
 
+.pokemon-list-item-order-number {
+	color: #888;
+	padding-left: 8px;
+}
+
 .detail-view {
 	/* border: 2px solid fuchsia !important; */
 	top: 0px;
@@ -233,9 +241,11 @@ export default defineComponent({
 		right: 0px;
 		padding: 20px;
 	}
+}
 
+@media screen and (max-width: 1023px) {
 	.pokemon-list-item {
-		flex-basis: 100%;
+		flex-basis: 50%;
 	}
 }
 </style>
