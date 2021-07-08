@@ -2,7 +2,11 @@
 	<div class="row">
 		<div class="col-sm-12 col-md-7">
 			<h1>MiniDex</h1>
-			<Search @search="performSearch" textValue=""></Search>
+			<Search
+				@search="performSearch"
+				placeholderText="Filter by Name"
+				textValue=""
+			></Search>
 			<div id="pokemon-list">
 				<div
 					class="pokemon-list-item"

@@ -2,7 +2,7 @@
 	<p>
 		<input
 			@input="onSearch"
-			placeholder="Find Pokemon by name"
+			:placeholder="placeholderText"
 			v-model="searchText"
 			type="text"
 		/>
@@ -10,8 +10,10 @@
 	</p>
 </template>
 
-<script>
-export default {
+<script lang="ts">
+import { defineComponent } from 'vue'
+
+export default defineComponent({
 	name: 'Search',
 	data() {
 		return {
@@ -26,8 +28,9 @@ export default {
 	},
 	props: {
 		textValue: String,
+		placeholderText: String,
 	},
-}
+})
 </script>
 
 <style></style>
