@@ -70,8 +70,6 @@ export default class MiniPokedexAPI {
 	 * For simplicity reasons, it always follows the first evolution if multiple ones exist
 	 */
 	async getEvolutions(species: Model.PokemonSpecies): Promise<Model.PokemonSpecies[]> {
-		// proof of concept:
-
 		const chainUrl = species.evolution_chain.url
 
 		// chain is recursive, format: {chain: {evolves_to: chain, species: {name, url}}}
@@ -112,7 +110,6 @@ export default class MiniPokedexAPI {
 	 */
 	localize(names: [Model.Name], lang: string): string {
 		return this.findLocalizedName(names, lang)
-
 	}
 
 	findLocalizedName(names: [Model.Name], lang: string): string {
