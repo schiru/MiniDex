@@ -28,6 +28,7 @@
 			id="pokemon-hide-button"
 			to="/"
 			aria-label="Back to pokemon list"
+			@click="scrollToTop"
 		></router-link>
 		<p class="error" v-if="error == true">
 			Failed to load Pokemon, please try again later.
@@ -78,22 +79,30 @@
 			</ul>
 
 			<h2>Moves</h2>
-			<a
-				class="btn btn-primary"
-				data-bs-toggle="collapse"
-				href="#pokemonMoves"
-				role="button"
-				aria-expanded="false"
-				aria-controls="pokemonMoves"
-			>
-				Show/Hide Moves
-			</a>
-			<ul class="collapse" id="pokemonMoves">
-				<li v-if="movesLoading">Loading...</li>
-				<li v-if="movesError">An error occurred, please reload the page.</li>
+			<p class="button-pokemon-moves" v-if="!movesLoaded">
+				<button
+					@click="fetchMoves"
+					class="btn btn-warning"
+					type="button"
+					:disabled="isLoading"
+				>
+					<span
+						class="spinner-border spinner-border-sm"
+						role="status"
+						aria-hidden="true"
+						v-if="movesLoading"
+					></span>
+					Load all possible moves
+				</button>
+			</p>
 
-				<li v-bind:key="move.move.name" v-for="move in moves">
-					{{ localize(move.move.names) }}
+			<ul id="pokemonMoves">
+				<li v-if="movesError">
+					Moves could not be fetched. Please try again later.
+				</li>
+
+				<li v-bind:key="move.name" v-for="move in moves">
+					{{ localize(move.names) }}
 				</li>
 			</ul>
 		</article>
@@ -124,8 +133,9 @@ export default defineComponent({
 			evolutions: [] as PokemonSpecies[],
 			moves: [] as PokemonMove[],
 			abilities: '',
-			movesLoading: false,
 			loading: false,
+			movesLoading: false,
+			movesLoaded: false,
 			movesError: false,
 			error: false,
 		}
@@ -136,10 +146,20 @@ export default defineComponent({
 		localize(names: [Name]): string {
 			return this.api.localize(names, this.lang)
 		},
-		async fetchPokemon(name: string) {
+		scrollToTop() {
 			let pokemon = document.querySelector('#pokemon')
-			let pokemonMoves = document.querySelector('#pokemonMoves')
-			if (pokemonMoves !== null) pokemonMoves.classList.remove('show')
+
+			if (pokemon != null) {
+				pokemon.scrollTop = 0
+			}
+		},
+		async fetchPokemon(name: string) {
+			this.scrollToTop()
+
+			this.moves = []
+			this.movesLoading = false
+			this.movesLoaded = false
+			this.movesError = false
 
 			this.loading = true
 			this.error = false
@@ -153,22 +173,19 @@ export default defineComponent({
 			}
 
 			this.fetchEvolutions()
-
-			if (pokemon != null) {
-				pokemon.scrollTop = 0
-			}
 		},
 		async fetchEvolutions() {
 			this.evolutions = []
 			this.evolutions = await this.api.getEvolutions(this.basicInfo.species)
 		},
-		async fetchMoves(name: string) {
+		async fetchMoves() {
 			this.moves = []
 			this.movesLoading = true
 			this.movesError = false
 
 			try {
-				this.moves = await this.api.getMoves(name)
+				this.moves = await this.api.getMoves(this.basicInfo.species.name)
+				this.movesLoaded = true
 			} catch (error) {
 				console.error('failed to load moves, error:', error)
 				this.movesError = true
@@ -260,8 +277,6 @@ div.no-pokemon-selected {
 	transform: translate(-50%, -50%);
 	left: 50%;
 	top: 200px;
-	/* bottom: 30px; */
-	/* right: 30px; */
 }
 
 p.pokemon-image {
@@ -333,6 +348,11 @@ ul.pokemon-evolutions {
 
 .pokemon-evolutions li.current {
 	font-weight: bold;
+}
+
+.button-pokemon-moves {
+	text-align: center;
+	padding: 15px;
 }
 
 table {

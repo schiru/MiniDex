@@ -181,12 +181,9 @@ export default class MiniPokedexAPI {
 	}
 
 	/** Analogous to resolveStats */
-	private async resolveMoves(moves: any): Promise<[Model.PokemonMove]> {
-		for (const moveIndex in moves) {
-				const resolved = await P.getMoveByName(moves[moveIndex].move.name) as Model.PokemonMove
-				moves[moveIndex].move = resolved
-			}
-
-			return moves
+	private async resolveMoves(moves: any): Promise<Model.PokemonMove[]>  {
+		return Promise.all(moves.map(move => {
+			return P.getMoveByName(move.move.name)
+		})) as Promise<Model.PokemonMove[]>
 	}
 }

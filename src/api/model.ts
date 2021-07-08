@@ -67,10 +67,6 @@ export type PokemonAbilityInfo = {
 }
 
 export type PokemonMove = {
-	move: PokemonMoveInfo
-}
-
-export type PokemonMoveInfo = {
 	/**
 	 * the identifying name on pokeapi
 	 */
