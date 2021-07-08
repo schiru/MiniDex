@@ -120,7 +120,9 @@ export default defineComponent({
 		filteredPokemon() {
 			if (this.filterText.length > 0) {
 				return this.pokemons.filter(pokemon => {
-					return pokemon.species.name.indexOf(this.filterText) > -1
+					// all internal names are lowercase -> convert search to lowercase
+					let filterTextLowercase = this.filterText.toLowerCase()
+					return pokemon.species.name.indexOf(filterTextLowercase) > -1
 				})
 			}
 			return this.pokemons

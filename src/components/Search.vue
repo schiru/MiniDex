@@ -3,7 +3,7 @@
 		class="form-control"
 		type="search"
 		aria-label="Search"
-		@input="onSearch"
+		@keyup="onSearch"
 		:placeholder="placeholderText"
 		v-model="searchText"
 	/>
