@@ -1,4 +1,4 @@
-import SimplePokedexAPI from "./MiniPokedexAPI"
+import SimplePokedexAPI from "./SimplePokedexAPI"
 import PokedexAPI from "./PokedexAPI"
 import { Pokedex } from "pokeapi-js-wrapper"
 
