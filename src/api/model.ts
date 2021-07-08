@@ -114,7 +114,7 @@ export interface PokemonBasicInfo {
 	orderNumber: number
 	species: PokemonSpecies
 	sprites: PokemonSprites
-	stats: [PokemonStat]
-	types: [PokemonType]
-	abilities: [PokemonAbility]
+	stats: PokemonStat[]
+	types: PokemonType[]
+	abilities: PokemonAbility[]
 }

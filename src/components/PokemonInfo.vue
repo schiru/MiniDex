@@ -9,7 +9,9 @@
 			aria-label="Back to pokemon list"
 		></router-link>
 		<h1 v-if="loading === true">Loading...</h1>
-		<h1 v-if="error == true">I've got no pokemon for you today</h1>
+		<h1 v-if="error == true">
+			Failed to load Pokemon, please try again later.
+		</h1>
 		<article v-else-if="basicInfo !== null">
 			<p class="pokemon-image">
 				<img v-bind:src="basicInfo.sprites.front_default" />
@@ -111,18 +113,7 @@ export default defineComponent({
 	methods: {
 		/** convenience method for template */
 		localize(names: [Name]): string {
-			return (
-				this.findLocalizedName(names, this.lang) ?? 'Could not resolve name'
-			)
-		},
-		findLocalizedName(names: [Name], lang: string): string | null {
-			for (const name of names) {
-				if (name.language.name === lang) {
-					return name.name
-				}
-			}
-
-			return null
+			return this.api.localize(names, this.lang)
 		},
 		async fetchPokemon(name: string) {
 			let pokemon = document.querySelector('#pokemon')
@@ -130,6 +121,7 @@ export default defineComponent({
 			if (pokemonMoves !== null) pokemonMoves.classList.remove('show')
 
 			this.loading = true
+			this.error = false
 			try {
 				this.basicInfo = await this.api.getBasicInfo(name)
 			} catch (error) {
@@ -140,7 +132,6 @@ export default defineComponent({
 			}
 
 			this.fetchEvolutions()
-			// this.fetchMoves(name)
 
 			if (pokemon != null) {
 				pokemon.scrollTop = 0

@@ -4,17 +4,39 @@ import * as Model from "./model"
 const P = new Pokedex()
 
 export default class MiniPokedexAPI {
+	async getPokemonList(offset: number = 0, limit = 10000): Promise<Model.PokemonBasicInfo[]> {
+		const unresolvedPokemonList = (await P.getPokemonsList({ offset, limit })).results
 
-	async getBasicInfo(name: string): Promise<Model.PokemonBasicInfo> {
+		console.log('UNRESOLVED', unresolvedPokemonList)
+		const fetchedInfos = await Promise.all(
+			unresolvedPokemonList.map(pokemon => {
+				return this.getBasicInfo(pokemon.name, false)
+			}) as Promise<Model.PokemonBasicInfo>[]
+		)
+
+		const sortedByOrderNumber = fetchedInfos.sort(
+			(a, b) => a.orderNumber - b.orderNumber
+		)
+
+		return sortedByOrderNumber
+	}
+
+	/**
+	 * Fetches basic info about a pokemon
+	 * @param name The pokeapi name of the to-be-fetched pokemon
+	 * @param fetchCharacteristics If set to false, only the species will be included in the result (no stats, types, abilities)
+	 * @returns
+	 */
+	async getBasicInfo(name: string, fetchCharacteristics: boolean = true): Promise<Model.PokemonBasicInfo> {
 		const pokemon = await P.getPokemonByName(name)
 
 		console.log('POKEMON', pokemon)
 
 		const sprites = pokemon.sprites
 		const species = await P.getPokemonSpeciesByName(pokemon.species.name) as Model.PokemonSpecies
-		const stats = await this.resolveStats(pokemon.stats)
-		const types = await this.resolveTypes(pokemon.types)
-		const abilities = await this.resolveAbilities(pokemon.abilities)
+		const stats = fetchCharacteristics ? await this.resolveStats(pokemon.stats) : []
+		const types = fetchCharacteristics ? await this.resolveTypes(pokemon.types) : []
+		const abilities = fetchCharacteristics ? await this.resolveAbilities(pokemon.abilities) : []
 
 		console.log('SPECIES:', species)
 		console.log('STATS:', stats)
@@ -80,6 +102,34 @@ export default class MiniPokedexAPI {
 		} else {
 			return currentEvolutions
 		}
+	}
+
+	/**
+	 * Resolves a specific locale from a given array of localization names
+	 * @param names The names retrieved by the API
+	 * @param lang The language to localize, e.g. 'en'
+	 * @returns Localized name in the given language, or english if the given language was not found
+	 */
+	localize(names: [Model.Name], lang: string): string {
+		return this.findLocalizedName(names, lang)
+
+	}
+
+	findLocalizedName(names: [Model.Name], lang: string): string {
+		let resolvedString = null
+
+		for (const name of names) {
+			if (name.language.name === lang) {
+				resolvedString = name.name
+			}
+		}
+
+		if (resolvedString == null) {
+			// fall back to english locale if desired language was not found
+			resolvedString = this.findLocalizedName(names, 'en')
+		}
+
+		return resolvedString
 	}
 
 	// Private:

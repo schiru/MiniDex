@@ -9,16 +9,56 @@
 					:key="pokemon"
 					v-for="pokemon in filteredPokemon"
 				>
-					<img v-bind:src="pokemon.url" loading="lazy" />
+					<img v-bind:src="pokemon.sprites.front_default" loading="lazy" />
 
 					<router-link
 						v-bind:to="{
 							name: 'Pokemon',
-							params: { name: pokemon.identifierName },
+							params: { name: pokemon.species.name },
 						}"
-						>{{ pokemon.name }}</router-link
+						>{{ localize(pokemon.species.names) }}</router-link
 					>
 				</div>
+			</div>
+
+			<div id="pokemon-list-bottom-info">
+				<p v-if="error">
+					An error occurred while fetching Pokemon, please reload the page to
+					try again.
+				</p>
+				<span v-if="!loadedAll && !error">
+					<button
+						@click="loadMore()"
+						class="btn btn-primary"
+						type="button"
+						:disabled="isLoading"
+					>
+						<span
+							class="spinner-border spinner-border-sm"
+							role="status"
+							aria-hidden="true"
+							v-if="isLoading"
+						></span>
+						{{ loadingButtonText }}
+					</button>
+					<span v-if="!isLoading">
+						or
+						<button
+							@click="loadAll()"
+							class="btn btn-primary"
+							type="button"
+							:disabled="isLoading"
+						>
+							<span
+								class="spinner-border spinner-border-sm"
+								role="status"
+								aria-hidden="true"
+								v-if="isLoading"
+							></span>
+							Load all (takes a while)
+						</button>
+					</span>
+				</span>
 			</div>
 		</div>
 		<div id="sidebar" class="col-sm-12 col-md-5">
@@ -27,9 +67,10 @@
 	</div>
 </template>
 
-<script>
+<script lang="ts">
 import { defineComponent } from 'vue'
 import MiniPokedexAPI from './api/MiniPokedexAPI'
+import { Name } from '@/api/model'
 import Search from './components/Search.vue'
 
 export default defineComponent({
@@ -41,44 +82,75 @@ export default defineComponent({
 		return {
 			pokemons: [],
 			filterText: '',
+			pokemonCount: 50,
+			loadMoreCount: 50,
 			api: new MiniPokedexAPI(),
+			lang: 'en',
+			error: false,
+			isLoading: false,
+			loadedAll: false,
 		}
 	},
 	computed: {
 		filteredPokemon() {
 			if (this.filterText.length > 0) {
 				return this.pokemons.filter(pokemon => {
-					return pokemon.name.indexOf(this.filterText) > -1
+					return pokemon.species.name.indexOf(this.filterText) > -1
 				})
 			}
 			return this.pokemons
 		},
+		loadingButtonText(): string {
+			if (this.isLoading) {
+				return 'Loading Pokemon...'
+			}
+
+			return `Load ${this.loadMoreCount} more`
+		},
 	},
 	methods: {
+		localize(names: [Name]): string {
+			return this.api.localize(names, this.lang)
+		},
 		performSearch(val) {
 			console.log('input changed', val)
 			this.filterText = val
 		},
+		loadMore() {
+			this.pokemonCount += this.loadMoreCount
+		},
+		async loadAll() {
+			try {
+				await this.fetchPokemon(this.pokemonCount, 10000)
+			} catch (error) {
+				console.log('failed to load all pokemon, error', error)
+				this.error = true
+				return
+			}
+
+			this.loadedAll = true
+		},
+		async fetchPokemon(offset, count) {
+			this.isLoading = true
+			try {
+				const morePokemon = await this.api.getPokemonList(offset, count)
+				this.pokemons = this.pokemons.concat(morePokemon)
+			} catch (error) {
+				console.error('failed to fetch pokemon list, error: ', error)
+				this.error = true
+			} finally {
+				this.isLoading = false
+			}
+		},
+	},
+	watch: {
+		async pokemonCount(to, from) {
+			const diff = to - from
+			this.fetchPokemon(from, diff)
+		},
 	},
 	mounted() {
-		fetch('https://pokeapi.co/api/v2/pokemon?limit=100&offset=60')
-			.then(response => {
-				return response.json()
-			})
-			.then(json => {
-				console.log('fetched', json)
-				const _this = this
-				json.results.forEach(pokemon => {
-					this.api.getBasicInfo(pokemon.name).then(info => {
-						_this.pokemons.push({
-							// index: count,
-							url: `https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/${info.species.id}.png`,
-							name: info.species.names[7].name,
-							identifierName: pokemon.name,
-						})
-					})
-				})
-			})
+		this.fetchPokemon(0, this.pokemonCount)
 	},
 })
 </script>
@@ -87,6 +159,11 @@ export default defineComponent({
 #pokemon-list {
 	display: flex;
 	flex-wrap: wrap;
+}
+
+#pokemon-list-bottom-info {
+	text-align: center;
+	padding: 30px;
 }
 
 .pokemon-list-item {
