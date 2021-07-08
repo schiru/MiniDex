@@ -40,6 +40,7 @@
 					An error occurred while fetching Pokemon, please reload the page to
 					try again.
 				</p>
+				<p v-if="!isLoading && !loadedAll">{{ pokemonCount }} Pokemon loaded</p>
 				<span v-if="!loadedAll && !error">
 					<button
 						@click="loadMore()"
@@ -107,6 +108,9 @@ export default defineComponent({
 		}
 	},
 	computed: {
+		/**
+		 * Important limitation: currently only filters the internal (i.e. english names, not the localization!!)
+		 */
 		filteredPokemon() {
 			if (this.filterText.length > 0) {
 				return this.pokemons.filter(pokemon => {
@@ -241,6 +245,11 @@ export default defineComponent({
 		bottom: 0px;
 		right: 0px;
 		padding: 20px;
+	}
+
+	.pokemon-list-item {
+		flex-basis: 100% !important;
+		font-size: 120%;
 	}
 }
 
