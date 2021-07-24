@@ -35,7 +35,7 @@
 
 						{{ localize(pokemon.species.names) }}
 						<span class="pokemon-list-item-order-number"
-							>#{{ pokemon.orderNumber }}</span
+							>#{{ pokemon.id }}</span
 						>
 					</div>
 				</router-link>

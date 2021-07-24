@@ -40,7 +40,7 @@
 
 			<h1>
 				{{ localize(basicInfo.species.names) }}
-				<span class="order-number">#{{ basicInfo.orderNumber }}</span>
+				<span class="order-number">#{{ basicInfo.id }}</span>
 			</h1>
 
 			<ul class="pokemon-types">
@@ -73,7 +73,13 @@
 					v-bind:key="species.name"
 					v-for="species in evolutions"
 				>
-					{{ localize(species.names) }}
+					<router-link
+						v-bind:to="{
+							name: 'Pokemon',
+							params: { name: species.name },
+						}"
+						>{{ localize(species.names) }}</router-link
+					>
 				</li>
 			</ul>
 
@@ -343,8 +349,17 @@ ul.pokemon-evolutions {
 	text-align: center;
 }
 
+.pokemon-evolutions li a {
+	color: black;
+}
+
 .pokemon-evolutions li.current {
 	font-weight: bold;
+}
+
+.pokemon-evolutions li.current a {
+	color: black;
+	text-decoration: none;
 }
 
 .button-pokemon-moves {
