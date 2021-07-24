@@ -128,35 +128,52 @@ export default class SimplePokedexAPI implements PokedexAPI {
 					},
 				]
 
-	 * Converts the stat reference received from the API to an actual stat object
+	 * Converts the stat reference received from the API to a resolved stat object
 	 */
 	private async resolveStats(stats: any): Promise<Model.PokemonStat[]> {
-		for (const statIndex in stats) {
-			const resolved_stat = await this.P.getStatByName(stats[statIndex].stat.name) as Model.PokemonStatInfo
-			stats[statIndex].stat = resolved_stat
-		}
+		return Promise.all(
+			stats.map(stat => this.resolveStat(stat))
+		)
+	}
 
-		return stats
+	/** Takes one stat entry (see resolveStat) and resolves the included stats reference */
+	private async resolveStat(stat: any): Promise<Model.PokemonStat> {
+		console.log('STAT:', stat, stat.stat)
+		const resolved_stat = await this.P.getStatByName(stat.stat.name) as Model.PokemonStatInfo
+		stat.stat = resolved_stat
+
+		return stat
 	}
 
 	/** Analogous to resolveStats */
 	private async resolveTypes(types: any): Promise<Model.PokemonType[]> {
-		for (const typeIndex in types) {
-				const resolved_type = await this.P.getTypeByName(types[typeIndex].type.name) as Model.PokemonTypeInfo
-				types[typeIndex].type = resolved_type
-			}
+		return Promise.all(
+			types.map(type => this.resolveType(type))
+		)
+	}
 
-			return types
+	/** Analogous to resolveStat */
+	private async resolveType(type: any): Promise<Model.PokemonType> {
+		console.log('TYPE: ', type)
+		const resolved_type = await this.P.getTypeByName(type.type.name) as Model.PokemonTypeInfo
+		type.type = resolved_type
+
+		return type
 	}
 
 	/** Analogous to resolveStats */
 	private async resolveAbilities(abilities: any): Promise<Model.PokemonAbility[]> {
-		for (const abilityIndex in abilities) {
-				const resolved = await this.P.getAbilityByName(abilities[abilityIndex].ability.name) as Model.PokemonAbilityInfo
-				abilities[abilityIndex].ability = resolved
-			}
+		return Promise.all(
+			abilities.map(ability => this.resolveAbility(ability))
+		)
+	}
 
-			return abilities
+	/** Analogous to resolveStat */
+	private async resolveAbility(ability: any): Promise<Model.PokemonAbility> {
+		const resolved_ability = await this.P.getAbilityByName(ability.ability.name) as Model.PokemonAbilityInfo
+		ability.ability = resolved_ability
+
+		return ability
 	}
 
 	/** Analogous to resolveStats */
