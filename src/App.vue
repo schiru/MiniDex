@@ -46,7 +46,7 @@
 					An error occurred while fetching Pokemon, please reload the page to
 					try again.
 				</p>
-				<p v-if="!isLoading">Showing {{ pokemonCount }} Pokemon</p>
+				<p v-if="!isLoading">Loaded {{ pokemonCount }} Pokemon</p>
 				<span v-if="isLoading">
 					<button
 						class="btn btn-warning pokemon-list-loading-button"
@@ -99,10 +99,13 @@ export default defineComponent({
 		 */
 		filteredPokemon() {
 			if (this.filterText.length > 0) {
+				let filterTextLowercase = this.filterText.toLowerCase()
 				return this.pokemons.filter(pokemon => {
-					// all internal names are lowercase -> convert search to lowercase
-					let filterTextLowercase = this.filterText.toLowerCase()
-					return pokemon.species.name.indexOf(filterTextLowercase) > -1
+					return (
+						this.localize(pokemon.species.names)
+							.toLowerCase()
+							.indexOf(filterTextLowercase) > -1
+					)
 				})
 			}
 			return this.pokemons
@@ -149,7 +152,7 @@ export default defineComponent({
 		},
 	},
 	mounted() {
-		this.fetchPokemon(0, this.pokemonCount)
+		this.fetchPokemon(0, 10000)
 	},
 })
 </script>
