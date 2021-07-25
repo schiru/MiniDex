@@ -47,6 +47,7 @@
 					try again.
 				</p>
 				<p v-if="!isLoading">Loaded {{ pokemonCount }} Pokemon</p>
+
 				<span v-if="isLoading">
 					<button
 						class="btn btn-warning pokemon-list-loading-button"
@@ -62,6 +63,19 @@
 						{{ loadingButtonText }}
 					</button>
 				</span>
+
+				<footer>
+					<p>
+						A project by
+						<a href="https://twitter.com/_schiru" target="_blank"
+							>Thomas Jirout</a
+						>
+						&middot;
+						<a href="https://github.com/schiru/MiniDex" target="_blank"
+							>View on Github</a
+						>
+					</p>
+				</footer>
 			</div>
 		</div>
 		<div id="sidebar" class="col-sm-12 col-md-5">
@@ -187,7 +201,7 @@ header h1 {
 }
 
 .pokemon-list-loading-button {
-	margin: 10px;
+	margin: 60px 10px 100px 10px;
 }
 
 .pokemon-list-item {
@@ -252,5 +266,9 @@ header h1 {
 	.pokemon-list-item {
 		flex-basis: 50%;
 	}
+}
+
+footer a {
+	color: black;
 }
 </style>
