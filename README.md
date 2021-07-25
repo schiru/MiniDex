@@ -59,4 +59,4 @@ npm run lint
 
 # Licence
 
-MIT (see [LICENCE](licence))
+MIT (see [LICENCE](LICENCE))
