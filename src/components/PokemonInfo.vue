@@ -10,7 +10,7 @@
 		</div>
 		<button
 			v-if="loading === true"
-			class="loading-pokemon btn btn-light"
+			class="loading-pokemon btn btn-warning"
 			type="button"
 			disabled
 		>
@@ -278,7 +278,7 @@ div.no-pokemon-selected {
 	position: absolute;
 	transform: translate(-50%, -50%);
 	left: 50%;
-	top: 200px;
+	top: 50%;
 }
 
 p.pokemon-image {

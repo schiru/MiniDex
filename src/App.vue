@@ -248,7 +248,7 @@ header h1 {
 	}
 }
 
-@media screen and (max-width: 1023px) {
+@media screen and (max-width: 1142px) {
 	.pokemon-list-item {
 		flex-basis: 50%;
 	}
