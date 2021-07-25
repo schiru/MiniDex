@@ -137,7 +137,6 @@ export default defineComponent({
 			basicInfo: null as PokemonBasicInfo,
 			evolutions: [] as PokemonSpecies[],
 			moves: [] as PokemonMove[],
-			abilities: '',
 			loading: false,
 			movesLoading: false,
 			movesLoaded: false,
