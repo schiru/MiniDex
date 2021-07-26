@@ -259,6 +259,10 @@ footer a {
 		padding: 20px;
 	}
 
+	#pokemon-list {
+		padding-right: 10px;
+	}
+
 	.pokemon-list-item {
 		flex-basis: 100% !important;
 		font-size: 120%;
