@@ -2,7 +2,7 @@
 
 [![Preview image on desktop](https://user-images.githubusercontent.com/581540/126909756-8e85c098-28f7-46a4-9ea3-09429a77eba0.png)](https://minidex.onrender.com)
 
-Simplistic Pokedex implementation using Vue.js and pokeapi.io.
+Simplistic Pokedex implementation using Vue.js, TypeScript and pokeapi.co.
 
 A small side project by Thomas Jirout ([_schiru](https://twitter.com/_schiru)) to experiment with Vue.js.
 
