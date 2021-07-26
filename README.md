@@ -1,6 +1,6 @@
 # MiniDex
 
-![Preview image on desktop](https://user-images.githubusercontent.com/581540/126909756-8e85c098-28f7-46a4-9ea3-09429a77eba0.png)
+[![Preview image on desktop](https://user-images.githubusercontent.com/581540/126909756-8e85c098-28f7-46a4-9ea3-09429a77eba0.png)](https://minidex.onrender.com)
 
 Simplistic Pokedex implementation using Vue.js and pokeapi.io.
 
@@ -14,6 +14,16 @@ A small side project by Thomas Jirout ([_schiru](https://twitter.com/_schiru)) t
 moves)
 - User can filter pokemon by name
 
+## Technologies
+
+- [TypeScript](https://www.typescriptlang.org/)
+- [Vue.js](https://vuejs.org) v3
+- [Vue.js router](https://router.vuejs.org/) v4
+- [Bootstrap](https://getbootstrap.com/) v5
+- Tests using [jest](https://jestjs.io/)
+- [pokeapi.co](pokeapi.co) used as backend
+- [pokeapi-js-wrapper](https://github.com/PokeAPI/pokeapi-js-wrapper) for automatic caching of API responses
+
 ## Features
 - Responsive design
 - Static page, no backend server required
@@ -25,8 +35,8 @@ moves)
 ## Possible Improvements
 - Add backend server that pre-fetches, caches and bundles data into one request to improve performance
 - SEO
-- Split UI into smaller components
-- NPM dependency audit (`npm audit`) showed that 9 moderate severity vulnerabilities that need to be fixed
+- Split UI into vue smaller components
+- NPM dependency audit (`npm audit`) showed that dependencies contained 9 moderate severity vulnerabilities
 
 ## Project setup
 Make sure Node.js and npm is installed (comes bundled) (tested with nodejs v14.17.3 and npm v6.14.13).
