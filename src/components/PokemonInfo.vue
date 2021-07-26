@@ -197,9 +197,15 @@ export default defineComponent({
 				this.movesLoading = false
 			}
 		},
+		/**
+		 * Since this componnent is displayed "position: fixed" so that it does not scroll with the page,
+		 * it does also not inherit the size of it's containing grid column.
+		 * Thus, this method manually makes the component as wide as its parent.
+		 */
 		changeSizeToFitParent() {
 			const selfNode = this.$refs.self
 			if (selfNode !== null && selfNode.parentNode !== null) {
+				// no need to adjust width in mobile view, since PokemonInfo component is fullscreen
 				if (window.innerWidth < 768) {
 					selfNode.style.width = 'inherit'
 					return
@@ -277,7 +283,8 @@ div.no-pokemon-selected {
 	position: absolute;
 	transform: translate(-50%, -50%);
 	left: 50%;
-	top: 50%;
+	top: 190px;
+	opacity: 1 !important;
 }
 
 p.pokemon-image {

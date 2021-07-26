@@ -10,7 +10,8 @@ const routes = [
 		component: PokemonInfo,
 		props: {
 			lang: Constants.lang // could be made dynamic so that UI can show different languages
-		}	},
+		}
+	},
 	{
 		path: '/pokemon/:name',
 		name: 'Pokemon',

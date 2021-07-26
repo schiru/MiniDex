@@ -19,6 +19,7 @@ export default interface PokedexAPI {
 	 * it can take a while to return from this method.
 	 */
 	getMoves(pokemonName: string): Promise<Model.PokemonMove[]>
+
 	/**
 	 * IMPORTANT: This method does not consider tree-like evolutions.
 	 * For simplicity reasons, it always follows the first evolution if multiple ones exist

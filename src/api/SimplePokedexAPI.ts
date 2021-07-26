@@ -26,7 +26,6 @@ export default class SimplePokedexAPI implements PokedexAPI {
 
 		debug && console.log('POKEMON', pokemon)
 
-
 		const sprites = pokemon.sprites
 		const species = await this.P.getPokemonSpeciesByName(pokemon.species.name) as Model.PokemonSpecies
 		const stats = fetchCharacteristics ? await this.resolveStats(pokemon.stats) : []
@@ -136,7 +135,7 @@ export default class SimplePokedexAPI implements PokedexAPI {
 		)
 	}
 
-	/** Takes one stat entry (see resolveStat) and resolves the included stats reference */
+	/** Takes one stat entry (see resolveStats) and resolves the included stats reference */
 	private async resolveStat(stat: any): Promise<Model.PokemonStat> {
 		console.log('STAT:', stat, stat.stat)
 		const resolved_stat = await this.P.getStatByName(stat.stat.name) as Model.PokemonStatInfo

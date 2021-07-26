@@ -91,6 +91,8 @@ import { Name } from '@/api/model'
 import Search from './components/Search.vue'
 import Constants from './Constants'
 
+const debug = Constants.debug
+
 export default defineComponent({
 	name: 'App',
 	components: {
@@ -108,9 +110,6 @@ export default defineComponent({
 		}
 	},
 	computed: {
-		/**
-		 * Important limitation: currently only filters the internal (i.e. english names, not the localization!!)
-		 */
 		filteredPokemon() {
 			if (this.filterText.length > 0) {
 				let filterTextLowercase = this.filterText.toLowerCase()
@@ -137,7 +136,7 @@ export default defineComponent({
 			return this.api.localize(names, this.lang)
 		},
 		performSearch(val) {
-			console.log('input changed', val)
+			debug && console.log('input changed', val)
 			this.filterText = val
 		},
 		async fetchPokemon(offset, count) {
@@ -180,6 +179,10 @@ header {
 header h1 {
 	margin: 0;
 	font-size: 3em;
+}
+
+footer a {
+	color: black;
 }
 
 .pokemon-filter {
@@ -266,9 +269,5 @@ header h1 {
 	.pokemon-list-item {
 		flex-basis: 50%;
 	}
-}
-
-footer a {
-	color: black;
 }
 </style>
