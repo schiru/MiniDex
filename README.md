@@ -21,7 +21,7 @@ moves)
 - [Vue.js router](https://router.vuejs.org/) v4
 - [Bootstrap](https://getbootstrap.com/) v5
 - Tests using [jest](https://jestjs.io/)
-- [pokeapi.co](pokeapi.co) used as backend
+- [pokeapi.co](https://pokeapi.co) used as backend
 - [pokeapi-js-wrapper](https://github.com/PokeAPI/pokeapi-js-wrapper) for automatic caching of API responses
 
 ## Features
